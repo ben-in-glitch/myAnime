@@ -1,7 +1,7 @@
 FastAPI_practice/
 frontend_practice/
 SQLite_practice/
-
+test/
 
 __pycache__/
 *.pyc
