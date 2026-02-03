@@ -1,0 +1,221 @@
+from myanime import AnimeDB
+from fastapi import FastAPI, Query,Body
+from datetime import date
+from fastapi.middleware.cors import CORSMiddleware
+from typing import Annotated,Literal
+from fastapi.staticfiles import StaticFiles
+
+#2026-01-08
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+db = AnimeDB()
+StatusType = Literal["plan","next","watching","finished","quit"]
+# --------------------------------------index/set-up-----------------------------------------------
+# @app.get("/")
+# def index():
+#     return FileResponse("frontEnd/index.frontEnd")
+
+@app.post("init")
+def init():
+    if db.init_db():
+        return {"status":"Database created and initialized"}
+    else:
+        return {"status":"Database already exists"}
+# --------------------------------------anime----------------------------------------------------
+@app.get("/anime")
+def anime():
+    return db.lookup_anime()
+
+@app.post("/anime")
+def anime(body=Body(None)):
+    title = str(body["title"])
+    title_jp = str(body["title_jp"]) if body["title_jp"] else None
+    add, anime_id = db.anime_get_or_create(title,title_jp)
+    status = "anime created successfully" if add else f"{title} is already in your list"
+    return {"status": status,
+            "title": title,
+            "title_jp": title_jp,
+            "id":anime_id}
+
+
+@app.patch("/anime/{anime_id}")
+def anime(body=Body(None)):
+    anime_id=body["anime_id"]
+    title = body["title"]
+    title_jp = body["title_jp"]
+    if db.anime_update(anime_id,title,title_jp):
+        return {"status": "anime updated successfully"}
+
+    return {"status": "failed to update anime"}
+
+@app.delete("/anime/{anime_id}")
+def anime(anime_id:int):
+    delete, anime_title = db.anime_delete(anime_id)
+    status = f"{anime_title} was deleted successfully" if delete else "failed to delete anime"
+    return {"status": status,
+            "id":anime_id}
+# --------------------------------------season_status----------------------------------------------------
+@app.get("/anime/{anime_id:int}")
+def season_status(anime_id:int):
+    return db.lookup_season_status(anime_id=anime_id)
+
+@app.post("/anime/{anime_id}/seasons")
+def season_status(body = Body(None)):
+    anime_id: int =body["anime_id"]
+    post_season: int =body["season"]
+    status: str = body["status"] if body["status"] else "plan"
+    season_title: str = body["season_title"]
+    total_episodes: int = body["total_episodes"] if body["total_episodes"] else 12
+    air_year: int = body["air_year"]
+    air_season: str = body["air_season"]
+    rate: int = body["rate"] if body["rate"] else -1
+    add, season_status_id = db.season_status_get_or_create(anime_id,post_season,status,season_title,total_episodes,air_year,air_season,rate)
+    if add:
+        return {"status": "new season created successfully",
+                "anime_id": anime_id,
+                "season_status_id":season_status_id,
+                "season_status": status,
+                "season_title": season_title,
+                "total_episodes": total_episodes,
+                "air_yar": air_year,
+                "air_season": air_season,
+                "rate": rate}
+
+    return {"status": "this season already exists"}
+
+@app.patch("/seasons/{season_status_id}")
+def season_status(body=Body(None)):
+    season_status_id = body["season_status_id"]
+    update_season=body["season"]
+    status = body["status"]
+    season_title = body["season_title"]
+    total_episodes = body["total_episodes"] if body["total_episodes"] else 12
+    air_year = body["air_year"]
+    air_season = body["air_season"]
+    rate = body["rate"] if body["rate"] else -1
+
+    if db.season_status_update(
+            pk=season_status_id,
+            season=update_season,
+            status=status,
+            season_title=season_title,
+            total_episodes=total_episodes,
+            air_year=air_year,
+            air_season=air_season,
+            rate=rate
+):
+        return {"status": "season status updated successfully"}
+    return {"status": "failed to update season status"}
+
+@app.delete("/seasons/{season_status_id}")
+def season_status(season_status_id:int):
+    delete, anime_info = db.season_status_delete(season_status_id)
+    title, delete_season = anime_info if anime_info else (None,None)
+    status = "season status deleted successfully" if delete else "failed to delete season status"
+    return {"status": status,
+            "season_status_id": season_status_id,
+            "anime": title,
+            "season": delete_season}
+# --------------------------------------episode_log----------------------------------------------------
+@app.get("/seasons/{season_status_id}/episodes")
+def episode_log(season_status_id:int):
+    return db.lookup_episode_log(season_status_id)
+
+@app.post("/seasons/{seasons_status_id}/episodes")
+def episode_log(body = Body(None)):
+    season_status_id = body["season_status_id"]
+    post_episode = body["episode"]
+    title = body["title"] if body["title"] else post_episode
+    watch_date = body["watch_date"] if body["watch_date"] else date.today().isoformat()
+    add,episode_log_id = db.episode_log_get_or_create(season_status_id,post_episode,title,watch_date)
+    db.update_status(season_status_id)
+    if add:
+        return {"status": "episode created successfully",
+                "episode_log_id": episode_log_id,
+                "episode" : post_episode,
+                "title": title,
+                "watch_date": watch_date}
+    return {"status": "episode already exists"}
+
+@app.patch("/episodes/{episode_id}")
+def episode_log(body=Body(None)):
+    episode_id = body["episode_id"]
+    update_episode = body["episode"]
+    episode_title = body["episode_title"]
+    watch_date = body["watch_date"] if body["watch_date"] else date.today().isoformat()
+    if db.episode_log_update(pk=episode_id,episode=update_episode,episode_title=episode_title,watch_date=watch_date):
+        return {"status": "episode log updated successfully"}
+    return {"status": "failed to update episode log"}
+
+@app.delete("/episodes/{episode_id}")
+def episode_log(episode_id:int):
+    delete,episode_info = db.episode_log_delete(episode_id)
+    title, delete_season,delete_episode, episode_title = episode_info if episode_info else (None,None,None,None)
+    status = "episode log deleted successfully" if delete else "failed to delete episode log"
+    return {"status": status,
+            "title": title,
+            "season": delete_season,
+            "episode": delete_episode}
+# --------------------------------------look_up----------------------------------------------------
+@app.get("/lookup/anime")
+def anime(title=""):
+    return db.lookup_anime(title)
+
+@app.get("/lookup/season_status")
+def season_status(anime_id:int = None,
+                  get_season:int = None,
+                  status:str = None,
+                  season_title:str = None,
+                  total_episodes:int = None,
+                  air_year:int = None,
+                  air_season:str = None,
+                  rate:int = None):
+    status = status.lower() if status is not None else None
+    air_season = air_season.lower() if air_season is not None else None
+    return db.lookup_season_status(anime_id,get_season,status,season_title,total_episodes,air_year,air_season,rate)
+
+@app.get("/lookup/episode_log")
+def episode_log(season_status_id:int = None, get_episode:int = None,title:str = None, watch_date:str = None):
+    return db.lookup_episode_log(season_status_id,get_episode,title,watch_date)
+
+@app.get("/anime/resolve")
+def anime(title:str, get_season:int = None, get_episode:int = None):
+    return db.lookup_anime_resolve(title,get_season,get_episode)
+
+@app.get("/season/resolve")
+def season(season_id):
+    return db.lookup_season_resolve(season_id)
+
+@app.get("/episode/resolve")
+def episode(episode_id):
+    return db.lookup_episode_resolve(episode_id)
+
+# --------------------------------------others----------------------------------------------------
+@app.get("/count/status")
+def count(status:Annotated[StatusType,Query(...)]):
+    res = db.count_status(status)
+    return {status: res}
+
+@app.get("/count/watched_episodes")
+def count():
+    res = db.count_watched_episode()
+    return {"watched_episodes": res}
+
+@app.get("/count/episodes")
+def count(anime_id:int, season_status_id:int = None):
+    res = db.count_watched_episode(anime_id,season_status_id)
+    total = db.count_total_episodes(anime_id,season_status_id)
+    return {"anime_id":anime_id,
+            "season_status_id": season_status_id,
+            "total_episodes": total,
+            "watched_episodes": res}
+
+
+#-----------------staticfiles---------------------------------------
+app.mount("/", StaticFiles(directory="frontEnd",html=True))

@@ -1,0 +1,165 @@
+/*2026-01-29*/
+
+:root {
+    --space-1: 8px;
+    --space-1-1:14px;
+    --space-2: 16px;
+    --space-3: 24px;
+    --space-4: 32px;
+}
+
+:root{
+    --berry:#A12F63;
+    --rose-punch:#CF467E;
+    --dark_rose:#DE4D86;
+    --rouge:#E87595;
+    --candy:#F29CA3;
+    --blossom:#F5B3B8;
+    --light_rose:#F7CACD;
+    --sky:#BED8E3;
+    --blue:#84E6F8;
+}
+
+body {
+    background-color:var(--light_rose);
+    color:var(--berry);
+    margin: 0;
+    padding: var(--space-4);
+    font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    font-weight:500;
+    font-size: var(--space-2);
+    line-height: 1.5;
+    letter-spacing: 1px;
+    word-spacing: 1px
+
+}
+
+.frame{
+    display:flex;
+    gap: var(--space-1);
+    max-width:1200px;
+}
+
+.right{
+    flex:none;
+    width:auto;
+    gap: var(--space-1);
+    align-items: center;
+}
+
+.left{
+    flex:none;
+    width:auto;
+    gap: var(--space-4)
+}
+
+dialog{
+    background-color: var(--light_rose);
+    border-color: var(--rouge);
+    border-radius:5px
+
+}
+
+select{
+    background-color: var(--light_rose);
+    border-color: var(--rouge);
+    font-weight:550;
+}
+
+input{
+    background-color: var(--light_rose);
+    border-color:var(--rouge);
+    border-radius:5px;
+    gap:10px
+}
+
+.card{
+    border-collapse: collapse;
+    width:100%;
+    thead{
+    background-color: var(--blossom);
+    };
+    th, td{
+        border-bottom:1px solid var(--rouge);
+        padding:8px 12px;
+        text-align:center;
+        vertical-align:middle
+    };
+    th{
+        text-align:right;
+        color: var(--berry);
+    };
+    td{
+        vertical-align: middle;
+        color:var(--rose-punch);
+    };
+
+}
+
+button{
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    background-color:var(--rouge);
+    color:antiquewhite;
+    font-size: var(--space-1-1);
+    line-height: 1.2;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+button:hover{
+    background-color: var(--berry);
+    cursor:pointer;
+    transition: background-color 0.4s ease;
+    font-weight: 700;
+    line-height: 1.2;
+}
+.hidden_button:hover{
+    cursor:pointer;
+    transition: background-color 0.5s ease;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+
+.hr{
+    border-color: var(--sky);
+}
+.info{
+    background-color: var(--sky)
+}
+
+#achievement{
+    color:var(--dark_rose);
+    font-size: var(--space-2);
+}
+
+.title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 175px;
+}
+
+
+.icon{
+    width:40px;
+}
+
+#status_search{
+    display:none;
+}
+
+
+#blur_search{
+    display:block;
+}
+
+.img{
+    margin-top:var(--space-3);
+    border-radius: 20px;
+    width:500px;
+    max-width:100%;
+    height:auto
+}

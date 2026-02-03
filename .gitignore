@@ -1,0 +1,22 @@
+FastAPI_practice/
+frontend_practice/
+SQLite_practice/
+
+
+__pycache__/
+*.pyc
+*.pyo
+
+.venv/
+venv/
+env/
+
+start_api.bat
+myanime.db
+ideas
+
+.idea/
+.vscode/
+
+# Logs
+*.log
