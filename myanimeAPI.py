@@ -75,20 +75,11 @@ def season_status(body = Body(None)):
     total_episodes: int = body["total_episodes"] if body["total_episodes"] else 12
     air_year: int = body["air_year"]
     air_season: str = body["air_season"]
-    rate: int = body["rate"] if body["rate"] else -1
+    rate: int = body["rate"] if body["rate"] else None
     add, season_status_id = db.season_status_get_or_create(anime_id,post_season,status,season_title,total_episodes,air_year,air_season,rate)
-    if add:
-        return {"status": "new season created successfully",
-                "anime_id": anime_id,
-                "season_status_id":season_status_id,
-                "season_status": status,
-                "season_title": season_title,
-                "total_episodes": total_episodes,
-                "air_yar": air_year,
-                "air_season": air_season,
-                "rate": rate}
-
-    return {"status": "this season already exists"}
+    status = "new season created successfully" if add else "this season already exists"
+    return {"res":add,
+            "status": status}
 
 @app.patch("/seasons/{season_status_id}")
 def season_status(body=Body(None)):
@@ -99,7 +90,7 @@ def season_status(body=Body(None)):
     total_episodes = body["total_episodes"] if body["total_episodes"] else 12
     air_year = body["air_year"]
     air_season = body["air_season"]
-    rate = body["rate"] if body["rate"] else -1
+    rate = body["rate"] if body["rate"] else None
 
     if db.season_status_update(
             pk=season_status_id,
@@ -136,13 +127,14 @@ def episode_log(body = Body(None)):
     watch_date = body["watch_date"] if body["watch_date"] else date.today().isoformat()
     add,episode_log_id = db.episode_log_get_or_create(season_status_id,post_episode,title,watch_date)
     db.update_status(season_status_id)
-    if add:
-        return {"status": "episode created successfully",
-                "episode_log_id": episode_log_id,
-                "episode" : post_episode,
-                "title": title,
-                "watch_date": watch_date}
-    return {"status": "episode already exists"}
+    status = "episode log added successfully" if add else "episode already exists"
+    return {"res":add,
+            "status": status,
+            "episode_log_id": episode_log_id,
+            "episode" : post_episode,
+            "title": title,
+            "watch_date": watch_date}
+
 
 @app.patch("/episodes/{episode_id}")
 def episode_log(body=Body(None)):
@@ -150,9 +142,12 @@ def episode_log(body=Body(None)):
     update_episode = body["episode"]
     episode_title = body["episode_title"]
     watch_date = body["watch_date"] if body["watch_date"] else date.today().isoformat()
-    if db.episode_log_update(pk=episode_id,episode=update_episode,episode_title=episode_title,watch_date=watch_date):
-        return {"status": "episode log updated successfully"}
-    return {"status": "failed to update episode log"}
+    update = db.episode_log_update(pk=episode_id,episode=update_episode,episode_title=episode_title,watch_date=watch_date)
+    status = "episode log updated successfully" if update else "failed to update episode log"
+    return {
+        "res": update,
+        "status": status
+    }
 
 @app.delete("/episodes/{episode_id}")
 def episode_log(episode_id:int):
@@ -183,7 +178,7 @@ def season_status(anime_id:int = None,
 
 @app.get("/lookup/episode_log")
 def episode_log(season_status_id:int = None, get_episode:int = None,title:str = None, watch_date:str = None):
-    return db.lookup_episode_log(season_status_id,get_episode,title,watch_date)
+    return db.lookup_episode_log(season_status_id=season_status_id,episode=get_episode,episode_title=title,watch_date=watch_date)
 
 @app.get("/anime/resolve")
 def anime(title:str, get_season:int = None, get_episode:int = None):

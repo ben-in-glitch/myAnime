@@ -33,7 +33,7 @@ body {
     word-spacing: 1px
 
 }
-
+/*----------------------title & layout------------------------------------------*/
 .welcome{
     text-align:center;
     font-size: var(--space-2)
@@ -69,6 +69,55 @@ body {
     }
 }
 
+/*---------------------table---------------------------------------------*/
+.card {
+    border-collapse: collapse;
+    width: 100%;
+    thead {
+        background-color: var(--thead);
+        text-align: right;
+        };
+    }
+th, td{
+    border-bottom:1px solid var(--border);
+    padding:8px 12px;
+    vertical-align: middle;
+    text-align:center;
+}
+th{
+    color: var(--primary_ch);
+}
+td{
+    color:var(--primary_ch);
+}
+/*--------------------button-------------------------------------------------*/
+button{
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    background-color:var(--button);
+    color:var(--button-ch);
+    font-size: var(--space-1-1);
+    line-height: 1.2;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+button:hover{
+    background-color: var(--primary_ch);
+    cursor:pointer;
+    transition: background-color 0.4s ease;
+    font-weight: 700;
+    line-height: 1.2;
+}
+.hidden_button:hover{
+    cursor:pointer;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+
+/*-----------------------dialog/input/select---------------------------------------------------*/
 dialog{
     background-color: var(--primary);
     border-color: var(--border);
@@ -115,68 +164,10 @@ input{
     gap:10px
 }
 
-.card {
-    border-collapse: collapse;
-    width: 100%;
-    thead {
-        background-color: var(--thead);
-        text-align: right;
-        };
-    }
-th, td{
-    border-bottom:1px solid var(--border);
-    padding:8px 12px;
-    vertical-align: middle;
-    text-align:center;
-}
-th{
-    color: var(--primary_ch);
-}
-td{
-    color:var(--primary_ch);
-}
 
-button{
-    padding: 6px 12px;
-    border-radius: 5px;
-    border: none;
-    background-color:var(--button);
-    color:var(--button-ch);
-    font-size: var(--space-1-1);
-    line-height: 1.2;
-    margin-top:5px;
-    margin-bottom:5px;
-}
-
-button:hover{
-    background-color: var(--primary_ch);
-    cursor:pointer;
-    transition: background-color 0.4s ease;
-    font-weight: 700;
-    line-height: 1.2;
-}
-.hidden_button:hover{
-    cursor:pointer;
-    font-weight: 800;
-    line-height: 1.5;
-}
-
-
+/*-------------------------------others--------------------------------------*/
 .hr{
     border-color: var(--hr);
-}
-
-
-
-.title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 175px;
-}
-
-.icon{
-    width:40px;
 }
 
 #status_search{

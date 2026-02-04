@@ -113,7 +113,16 @@
             </div>
             <div class="status-search-row">
               <label for="input_rate">我的評分:</label>
-              <input id="input_rate" type="number" placeholder="-1~5">
+              <select id="input_rate">
+                <option value=""></option>
+                <option value="-1">-1</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="3">4</option>
+                <option value="3">5</option>
+              </select>
             </div>
             <div class="status-search-row">
               <label for="input_season">第幾季:</label>
@@ -237,7 +246,15 @@
       </p>
       <p class="form-row">
         <label for="rate">我的評分:</label>
-        <input id="rate" type= "number" placeholder="0-5分，預設-1">
+          <select id="rate">
+          <option value="-1">-1</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="3">4</option>
+          <option value="3">5</option>
+        </select>
       </p>
       <div class="action" >
         <button value="true">送出</button>
@@ -250,8 +267,8 @@
     <div>更新此季</div>
     <form method="dialog">
       <p class="form-row">
-        <label for="update_season">季*:</label>
-        <input id="update_season" type="number" placeholder="season">
+        <label for="update_season">季:</label>
+        <input id="update_season" type="number" placeholder="季" readonly>
       </p>
       <p class="form-row">
         <label for="update_status">狀態*:</label>
@@ -287,7 +304,15 @@
       </p>
       <p class="form-row">
         <label for="update_rate">我的評分:</label>
-        <input id="update_rate" placeholder="0-5分 預設-1">
+          <select id="update_rate">
+            <option value="-1">-1</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="3">4</option>
+            <option value="3">5</option>
+        </select>
       </p>
 
       <div class="action">
@@ -324,7 +349,7 @@
       <div>更新此集</div>
         <p class="form-row">
           <label for="update_episode">集數:</label>
-          <input id="update_episode" type="number" placeholder="episode">
+          <input id="update_episode" type="number" placeholder="episode" readonly>
         </p>
         <p class="form-row">
           <label for="update_episode_title">集名稱:</label>
@@ -332,7 +357,7 @@
         </p>
         <p class="form-row">
           <label for="update_watch_date">觀看日期:</label>
-          <input id="update_watch_date" placeholder="YYYY-MM-DD(預設今天)">
+          <input id="update_watch_date" type="date" placeholder="YYYY-MM-DD(預設今天)">
         </p>
       <div class="action">
         <button value="true">送出</button>

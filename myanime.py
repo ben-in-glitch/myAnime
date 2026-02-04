@@ -286,7 +286,8 @@ class AnimeDB:
         with self.get_connection() as conn:
             cur = conn.cursor()
             cur.execute(select, params)
-            return fetch_all_as_dict(cur)
+            res = fetch_all_as_dict(cur)
+            return res if res else None
 
     def lookup_episode_log(self,season_status_id=None,episode= None,episode_title = None,watch_date = None):
         fields, params = self.episode_log_arguments(season_status_id,episode,episode_title,watch_date)
@@ -297,17 +298,19 @@ class AnimeDB:
                   "e.watch_date AS watch_date "
                   "FROM anime a "
                   "LEFT JOIN season_status s ON a.id = s.anime_id "
-                  "LEFT JOIN episode_log e ON s.id = e.season_status_id ")
+                  "LEFT JOIN episode_log e ON s.id = e.season_status_id")
 
         if fields:
             for i in range(len(fields)):
                 fields[i] = "e." + fields[i]
-                select += " WHERE " + " AND ".join(fields)
+            select += " WHERE " + " AND ".join(fields)
             select += " ORDER BY a.id, s.season, e.episode ASC"
+
         with self.get_connection() as conn:
             cur = conn.cursor()
             cur.execute(select,params)
-            return fetch_all_as_dict(cur)
+            res = fetch_all_as_dict(cur)
+            return res if res else None
 
     def lookup_first_and_last_watch_date(self,anime_id,season):
         select = ("SELECT MIN(e.watch_date), MAX(e.watch_date) "
