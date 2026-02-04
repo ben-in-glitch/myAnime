@@ -21,12 +21,13 @@ StatusType = Literal["plan","next","watching","finished","quit"]
 # def index():
 #     return FileResponse("frontEnd/index.frontEnd")
 
-@app.post("init")
+@app.post("/init")
 def init():
-    if db.init_db():
-        return {"status":"Database created and initialized"}
-    else:
-        return {"status":"Database already exists"}
+    initialized = db.init_db()
+    status = "database created and initialized" if initialized else "database already exists"
+    return {"init":initialized,
+            "status":status}
+
 # --------------------------------------anime----------------------------------------------------
 @app.get("/anime")
 def anime():

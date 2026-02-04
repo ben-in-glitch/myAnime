@@ -29,6 +29,11 @@ function set_cur_anime_title_jp(title_jp){state.cur_anime_title_jp = title_jp}
 function set_cur_season_id(id){state.cur_season_id = id}
 function set_cur_finished_season(n){state.cur_finished_season = n}
 
+async function init_db(){
+    const res = await fetch("/init",{method:"POST"});
+    const data = await res.json();
+    return data['init']
+}
 
 async function status(status){
     let url = `/lookup/season_status?status=${status}`;
@@ -40,17 +45,18 @@ async function status(status){
 async function achievement(){
     const container = document.querySelector("#achievement");
     const n = state.cur_finished_season;
-    let title = "動畫小手";
-    if (n<10){title="動畫好手"}
-    else if(n<20){title="動畫高手"}
-    else if(n<30){title="入門宅宅"}
-    else if(n<40){title="愛家宅宅"}
+    let title;
+    if (n<10){title="動畫小手"}
+    else if(n<20){title="動畫好手"}
+    else if(n<30){title="動畫高手"}
+    else if(n<40){title="入門宅宅"}
     else if(n<50){title="高級宅宅"}
-    else if(n<100){title="宅斃了"}
-    else if(n<200){title="尊榮宅宅"}
-    else if(n<500){title="至尊宅宅"}
-    else if(n<800){title="禁咒宅宅"}
-    else if(n<1000){title="轉生者"}
+    else if(n<60){title="走火入魔"}
+    else if(n<70){title="你宅斃了"}
+    else if(n<80){title="尊榮宅宅"}
+    else if(n<90){title="至尊宅宅"}
+    else if(n<100){title="禁咒宅宅"}
+    else if(n<500){title="轉生者"}
     container.innerHTML = title
 }
 
@@ -481,12 +487,18 @@ function renderStatusRow(data) {
     }
 
 async function init(){
-    await status("plan");
-    await status("next");
-    await status("watching");
-    await count_watched();
-    await achievement();
-    await random_img()
+    const is_db = await init_db();
+    if (!is_db){
+        await status("plan");
+        await status("next");
+        await status("watching");
+        await count_watched();
+        await achievement();
+        await random_img()
+    }
+    else{
+        window.location.href = "/"
+    }
 
     }
 

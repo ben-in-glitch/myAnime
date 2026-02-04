@@ -1,7 +1,7 @@
 import sqlite3, os
 from datetime import date
 from contextlib import contextmanager
-from pathlib import Path
+
 
 #2026-01-05
 #----------------------------SQL structure------------------------------------
@@ -44,9 +44,7 @@ episode_log = '''CREATE TABLE IF NOT EXISTS episode_log (
 #----------------------------SQL Functions-----------------------------------
 class AnimeDB:
     def __init__(self):
-        self.BASE_DIR = Path(__file__).resolve().parent
-        self.DB_PATH = self.BASE_DIR / "myanime.db"
-        self.db_path = self.DB_PATH
+        self.db_path = "myanime.db"
 
     @contextmanager
     def get_connection(self):
@@ -61,7 +59,7 @@ class AnimeDB:
             conn.close()
 
     def init_db(self):
-        if os.path.exists(self.db_path):
+        if not os.path.exists(self.db_path):
             with self.get_connection() as conn:
                 cur = conn.cursor()
                 cur.execute("PRAGMA foreign_keys=ON")
@@ -440,13 +438,10 @@ def fetch_all_as_dict(cur):
     return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 #----------------------------testing-----------------------------------------
-# db = AnimeDB()
+
 # print(db.lookup_anime("我內心"))
 # x = db.lookup_episode_log(season_status_id = 20)
 # for i in x:
 #     print(i)
 
 # print(db.season_status_update(23,None,1,"watching","run",1,2025,"fall",5))
-
-
-
