@@ -9,20 +9,20 @@
 }
 
 :root{
-    --berry:#A12F63;
-    --rose-punch:#CF467E;
-    --dark_rose:#DE4D86;
-    --rouge:#E87595;
-    --candy:#F29CA3;
-    --blossom:#F5B3B8;
-    --light_rose:#F7CACD;
-    --sky:#BED8E3;
-    --blue:#84E6F8;
+    --primary_ch:#A12F63;
+    --row:#CF467E;
+    --achievement:#DE4D86;
+    --border:#E87595;
+    --button:#F29CA3;
+    --button-ch:#FFFFE8;
+    --thead:#F5B3B8;
+    --primary:#F7CACD;
+    --hr:#BED8E3;
 }
 
 body {
-    background-color:var(--light_rose);
-    color:var(--berry);
+    background-color:var(--primary);
+    color:var(--primary_ch);
     margin: 0;
     padding: var(--space-4);
     font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
@@ -34,74 +34,114 @@ body {
 
 }
 
+.welcome{
+    text-align:center;
+    font-size: var(--space-2)
+}
+
+#achievement{
+    color:var(--achievement);
+}
+
+
 .frame{
     display:flex;
-    gap: var(--space-1);
+    gap: var(--space-4);
     max-width:1200px;
+    width:100%
+}
+
+.left{
+    flex:none;
+    width:80%;
 }
 
 .right{
     flex:none;
     width:auto;
-    gap: var(--space-1);
-    align-items: center;
+
+
 }
 
-.left{
-    flex:none;
-    width:auto;
-    gap: var(--space-4)
+@media(max-width:1300px){
+    .frame{
+        flex-wrap:wrap;
+    }
 }
 
 dialog{
-    background-color: var(--light_rose);
-    border-color: var(--rouge);
+    background-color: var(--primary);
+    border-color: var(--border);
     border-radius:5px
-
 }
 
+.form-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.status-search-row {
+  display: grid;
+  grid-template-columns: 75px 75px;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+
+#confirm{
+    text-align:center;
+}
+
+.action{
+    margin-top:10px;
+    vertical-align:center;
+    align-content:center;
+    text-align:center;
+}
 select{
-    background-color: var(--light_rose);
-    border-color: var(--rouge);
+    background-color: var(--primary);
+    border-color: var(--border);
     font-weight:550;
 }
 
 input{
-    background-color: var(--light_rose);
-    border-color:var(--rouge);
+    background-color: var(--primary);
+    border-color:var(--border);
     border-radius:5px;
+    border-width: 2px;
+    inline-size:150px;
     gap:10px
 }
 
-.card{
+.card {
     border-collapse: collapse;
-    width:100%;
-    thead{
-    background-color: var(--blossom);
-    };
-    th, td{
-        border-bottom:1px solid var(--rouge);
-        padding:8px 12px;
-        text-align:center;
-        vertical-align:middle
-    };
-    th{
-        text-align:right;
-        color: var(--berry);
-    };
-    td{
-        vertical-align: middle;
-        color:var(--rose-punch);
-    };
-
+    width: 100%;
+    thead {
+        background-color: var(--thead);
+        text-align: right;
+        };
+    }
+th, td{
+    border-bottom:1px solid var(--border);
+    padding:8px 12px;
+    vertical-align: middle;
+    text-align:center;
+}
+th{
+    color: var(--primary_ch);
+}
+td{
+    color:var(--primary_ch);
 }
 
 button{
     padding: 6px 12px;
     border-radius: 5px;
     border: none;
-    background-color:var(--rouge);
-    color:antiquewhite;
+    background-color:var(--button);
+    color:var(--button-ch);
     font-size: var(--space-1-1);
     line-height: 1.2;
     margin-top:5px;
@@ -109,7 +149,7 @@ button{
 }
 
 button:hover{
-    background-color: var(--berry);
+    background-color: var(--primary_ch);
     cursor:pointer;
     transition: background-color 0.4s ease;
     font-weight: 700;
@@ -117,23 +157,16 @@ button:hover{
 }
 .hidden_button:hover{
     cursor:pointer;
-    transition: background-color 0.5s ease;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.5;
 }
 
 
 .hr{
-    border-color: var(--sky);
-}
-.info{
-    background-color: var(--sky)
+    border-color: var(--hr);
 }
 
-#achievement{
-    color:var(--dark_rose);
-    font-size: var(--space-2);
-}
+
 
 .title {
   white-space: nowrap;
@@ -141,7 +174,6 @@ button:hover{
   text-overflow: ellipsis;
   max-width: 175px;
 }
-
 
 .icon{
     width:40px;

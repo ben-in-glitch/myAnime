@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
-  <div>
+  <div class="welcome">
     您好
     <span id="achievement"></span>
     : 已觀看
@@ -20,7 +20,7 @@
   <div class="frame">
     <div class="left">
 
-      <div id="append_anime">
+      <div id="append_anime" class="search_box">
           <label for ="anime_title">新增動畫:</label><input type = "text" id="anime_title" placeholder="請輸入動畫">
           <label for ="anime_title_jp">日文:</label><input type = "text" id="anime_title_jp" placeholder="請輸入動畫(日文)(選擇)">
 
@@ -40,14 +40,12 @@
               <td><button id="addSeason">新增一季</button></td>
               <td>季</td>
               <td>名稱</td>
-              <td>目前集數</td>
-              <td>總集數</td>
+              <td>進度</td>
               <td>狀態</td>
-              <td>上映年分</td>
-              <td>上映季節</td>
-              <td>我的評分</td>
-              <td>開始觀看</td>
-              <td>結束觀看</td>
+              <td>上映年分|季節</td>
+              <td>評分</td>
+              <td>開始</td>
+              <td>結束</td>
             </tr>
           </thead>
 
@@ -61,7 +59,7 @@
         <span id="click_status_search" class="hidden_button">仔細找</span>
 
         <div id="blur_search">
-          <div id="blur_search_input">
+          <div id="blur_search_input" class="search_box">
             <label for ="blur_title"></label><input id ="blur_title" placeholder="動畫名稱">
 
             <button class="blur_search">送出</button>
@@ -72,7 +70,6 @@
             <table>
               <thead id="blur_thead" style="display:none">
                 <tr>
-                  <td>動畫ID</td>
                   <td>動畫名稱</td>
                   <td>名稱(日文)</td>
                   <td>總季數</td>
@@ -89,37 +86,43 @@
 
         <div id="status_search" style="display:none">
           <div id="status_search_input">
-            <label for="input_status">狀態:</label>
-            <select id="input_status">
-              <option value=""></option>
-              <option value="plan">待看中</option>
-              <option value="next">馬上看</option>
-              <option value="watching">觀看中</option>
-              <option value="finished">看完了</option>
-              <option value="quit">棄追</option>
-            </select>
-            <br/>
-            <label for="input_air_year">上映年分:</label>
-            <input id="input_air_year" type="number" placeholder="ex.2025">
-            <br/>
-            <label for="input_air_season">上映季節:</label>
-            <select id="input_air_season">
-              <option value=""></option>
-              <option value="spring">春</option>
-              <option value="summer">夏</option>
-              <option value="fall">秋</option>
-              <option value="winter">冬</option>
-            </select>
-            <br/>
-            <label for="input_rate">我的評分:</label>
-            <input id="input_rate" type="number" placeholder="-1~5">
-            <br/>
-            <label for="input_season">第幾季:</label>
-            <input id="input_season" type="number" placeholder="ex. 1">
-            <br/>
-            <label for="input_total_episodes">總共幾集:</label>
-            <input id="input_total_episodes" type="number" placeholder="ex. 12">
-            <br/>
+            <div class="status-search-row">
+              <label for="input_status">狀態:</label>
+              <select id="input_status">
+                <option value=""></option>
+                <option value="plan">待看中</option>
+                <option value="next">馬上看</option>
+                <option value="watching">觀看中</option>
+                <option value="finished">看完了</option>
+                <option value="quit">棄追</option>
+              </select>
+            </div>
+            <div class="status-search-row">
+              <label for="input_air_year">上映年分:</label>
+              <input id="input_air_year" type="number" placeholder="ex.2025">
+            </div>
+            <div class="status-search-row">
+              <label for="input_air_season">上映季節:</label>
+              <select id="input_air_season">
+                <option value=""></option>
+                <option value="spring">春</option>
+                <option value="summer">夏</option>
+                <option value="fall">秋</option>
+                <option value="winter">冬</option>
+              </select>
+            </div>
+            <div class="status-search-row">
+              <label for="input_rate">我的評分:</label>
+              <input id="input_rate" type="number" placeholder="-1~5">
+            </div>
+            <div class="status-search-row">
+              <label for="input_season">第幾季:</label>
+              <input id="input_season" type="number" placeholder="ex. 1">
+            </div>
+            <div class="status-search-row">
+              <label for="input_total_episodes">總共幾集:</label>
+              <input id="input_total_episodes" type="number" placeholder="ex. 12">
+            </div>
             <button class="status_search" data-id="true">送出</button>
             <button class="status_clean" data-id="false">清除</button>
           </div>
@@ -147,9 +150,6 @@
         </div>
       </div>
 
-      <div id="img">
-        <img id="img1" class="img" src=""  alt/>
-      </div>
     </div>
 
   <!---------------------list--------------------------->
@@ -174,30 +174,37 @@
     </div>
 
   </div>
+  <div id="img">
+    <img id="img1" class="img" src=""  alt/>
+  </div>
 <!----------------- dialog------------------------------------------->
   <dialog id="update_anime">
     <div>更新動畫</div>
     <form method="dialog">
-      <p><label for="update_title">動畫名稱*:</label>
+      <p class="form-row">
+        <label for="update_title">動畫名稱*:</label>
         <input id="update_title" placeholder="update_title">
       </p>
-      <p><label for="update_title_jp">名稱(日文):</label>
+      <p class="form-row">
+        <label for="update_title_jp">名稱(日文):</label>
         <input id="update_title_jp" placeholder="title_jp">
       </p>
-      <menu>
+      <div class="action">
         <button value="true">送出</button>
         <button value="false">關閉</button>
-      </menu>
+      </div>
     </form>
   </dialog>
 
   <dialog id="append_season">
     <div>新增一季</div>
     <form method = "dialog">
-      <p><label for="season">第幾季*:</label>
+      <p class="form-row">
+        <label for="season">第幾季*:</label>
         <input id="season" type="number" placeholder="season">
       </p>
-      <p><label for="status">狀態:</label>
+      <p class="form-row">
+        <label for="status">狀態:</label>
         <select id="status">
           <option value="plan">待看中</option>
           <option value="next">馬上看</option>
@@ -206,16 +213,20 @@
           <option value="quit">棄追</option>
         </select>
       </p>
-      <p><label for="season_title">季名稱:</label>
+      <p class="form-row">
+        <label for="season_title">季名稱:</label>
         <input id="season_title" placeholder="season_title">
       </p>
-      <p><label for="total_episodes">總集數:</label>
+      <p class="form-row">
+        <label for="total_episodes">總集數:</label>
         <input id="total_episodes" type="number" placeholder="預設12集">
       </p>
-      <p><label for="air_year">上映年分:</label>
+      <p class="form-row">
+        <label for="air_year">上映年分:</label>
         <input id="air_year" type="number" placeholder="2026">
       </p>
-      <p><label for="air_season">上映季節:</label>
+      <p class="form-row">
+        <label for="air_season">上映季節:</label>
         <select id="air_season">
           <option value=""></option>
           <option value="spring">春</option>
@@ -224,23 +235,26 @@
           <option value="winter">冬</option>
         </select>
       </p>
-      <p><label for="rate">我的評分:</label>
+      <p class="form-row">
+        <label for="rate">我的評分:</label>
         <input id="rate" type= "number" placeholder="0-5分，預設-1">
       </p>
-      <menu>
+      <div class="action" >
         <button value="true">送出</button>
         <button value="false">關閉</button>
-      </menu>
+      </div>
     </form>
   </dialog>
 
   <dialog id="update_seasons">
     <div>更新此季</div>
     <form method="dialog">
-      <p><label for="update_season">季*:</label>
+      <p class="form-row">
+        <label for="update_season">季*:</label>
         <input id="update_season" type="number" placeholder="season">
       </p>
-      <p><label for="update_status">狀態*:</label>
+      <p class="form-row">
+        <label for="update_status">狀態*:</label>
         <select id="update_status">
           <option value="plan">待看中</option>
           <option value="next">馬上看</option>
@@ -249,16 +263,20 @@
           <option value="quit">棄追</option>
         </select>
       </p>
-      <p><label for="update_season_title">季名稱:</label>
+      <p class="form-row">
+        <label for="update_season_title">季名稱:</label>
         <input id="update_season_title" placeholder="season_title">
       </p>
-      <p><label for="update_total_episodes">總集數:</label>
+      <p class="form-row">
+        <label for="update_total_episodes">總集數:</label>
         <input id="update_total_episodes" placeholder="預設12集">
       </p>
-      <p><label for="update_air_year">上映年分:</label>
+      <p class="form-row">
+        <label for="update_air_year">上映年分:</label>
         <input id="update_air_year" placeholder="2026">
       </p>
-      <p><label for="update_air_season">上映季節:</label>
+      <p class="form-row">
+        <label for="update_air_season">上映季節:</label>
         <select id="update_air_season">
           <option value=""></option>
           <option value="spring">春</option>
@@ -267,62 +285,69 @@
           <option value="winter">冬</option>
         </select>
       </p>
-      <p><label for="update_rate">我的評分:</label>
+      <p class="form-row">
+        <label for="update_rate">我的評分:</label>
         <input id="update_rate" placeholder="0-5分 預設-1">
       </p>
 
-      <menu>
+      <div class="action">
         <button value="true">送出</button>
         <button value="false">關閉</button>
-      </menu>
+      </div>
     </form>
   </dialog>
 
   <dialog id="append_episode">
     <div>新增一集</div>
     <form method="dialog">
-      <p><label for="episode">集數*:</label>
+      <p class="form-row">
+        <label for="episode">集數*:</label>
         <input id="episode" type="number" placeholder="episode">
       </p>
-      <p><label for="title">集名稱:</label>
+      <p class="form-row">
+        <label for="title">集名稱:</label>
         <input id="title" placeholder="title">
       </p>
-      <p><label for="watch_date">觀看日期:</label>
+      <p class="form-row">
+        <label for="watch_date">觀看日期:</label>
         <input id="watch_date" type="date" placeholder="YYYY-MM-DD(預設今天)">
       </p>
-      <menu>
+      <div class="action">
         <button value="true">送出</button>
         <button value="false">關閉</button>
-      </menu>
+      </div>
     </form>
   </dialog>
 
   <dialog id="update_episodes">
     <form method="dialog">
       <div>更新此集</div>
-        <p><label for="update_episode">集數:</label>
+        <p class="form-row">
+          <label for="update_episode">集數:</label>
           <input id="update_episode" type="number" placeholder="episode">
         </p>
-        <p><label for="update_episode_title">集名稱:</label>
+        <p class="form-row">
+          <label for="update_episode_title">集名稱:</label>
           <input id="update_episode_title" placeholder="title">
         </p>
-        <p><label for="update_watch_date">觀看日期:</label>
+        <p class="form-row">
+          <label for="update_watch_date">觀看日期:</label>
           <input id="update_watch_date" placeholder="YYYY-MM-DD(預設今天)">
         </p>
-      <menu>
+      <div class="action">
         <button value="true">送出</button>
         <button value="false">關閉</button>
-      </menu>
+      </div>
     </form>
   </dialog>
 
   <dialog id="confirm">
     <form method="dialog">
       <div>確定送出?</div>
-      <menu>
+      <div class="action">
         <button value = "true">確認</button>
         <button value = "false">再想想</button>
-      </menu>
+      </div>
     </form>
   </dialog>
 <!---------------------script--------------------------->

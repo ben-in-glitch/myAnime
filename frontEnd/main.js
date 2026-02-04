@@ -10,6 +10,19 @@ const state = {
     cur_finished_season:null,
     today:new Date().toISOString().slice(0, 10)
 }
+
+const translate = {
+    "spring":"春",
+    "summer":"夏",
+    "fall":"秋",
+    "winter":"冬",
+    "plan":"觀看中",
+    "next":"馬上看",
+    "watching":"正在看",
+    "finished":"看完了",
+    "quit":"棄追",
+    null:"",
+}
 function set_cur_anime_id(id){state.cur_anime_id = id}
 function set_cur_anime_title(title){state.cur_anime_title = title}
 function set_cur_anime_title_jp(title_jp){state.cur_anime_title_jp = title_jp}
@@ -58,8 +71,6 @@ function random_img(){
     const shuffled = imgs.sort(()=> Math.random() -0.5);
     document.querySelector("#img1").src = shuffled[0]
 }
-
-
 
 async function append_anime(){
     let title = document.querySelector("#anime_title").value;
@@ -268,7 +279,6 @@ async function blur_search(){
     container.innerHTML = res.map(renderBlurRow).join("");
     }
 
-
 function blur_clean(){
     document.querySelector("#blur_thead").style.display= "none"
     document.querySelector("#blur_search_container").innerHTML="";
@@ -351,7 +361,6 @@ async function get_seasons(anime_id){
     title.innerHTML = `<span>(ID: ${state.cur_anime_id})${state.cur_anime_title}|${state.cur_anime_title_jp}</span>
                       <button id="updateAnime">修改動畫</button>
                       <button id="deleteAnime">刪除動畫</button>
-                      
                      `;
 
     let output = document.querySelector("#season_info");
@@ -360,7 +369,7 @@ async function get_seasons(anime_id){
     
     document.getElementById("updateAnime").addEventListener("click",()=>(update_anime()))
     document.getElementById("deleteAnime").addEventListener("click", ()=>(delete_anime()))
-    document.getElementById("append_anime").scrollIntoView({behavior:"smooth"})
+    document.getElementById("achievement").scrollIntoView({behavior:"smooth"})
     }
 
 async function get_episodes(season_id){
@@ -404,18 +413,16 @@ function renderSeasonRow(data){
             </td>
             <td>${data['season']}</td>
             <td class="title">${data['season_title']}</td>
-            <td>${data['cur_episode']}</td>
-            <td>${data['total_episodes']}</td>
-            <td>${data['status']}</td>
-            <td>${data['air_year']}</td>
-            <td>${data['air_season']}</td>
+            <td>${data['cur_episode']}/${data['total_episodes']}</td>
+            <td>${translate[data['status']]}</td>
+            <td>${data['air_year']}|${translate[data['air_season']]}</td>
             <td>${data['rate']}</td>
             <td>${data['first_watch_date']}</td>
             <td>${data['last_watch_date']}</td>
       </tr>
       <tr>
         <td colspan="5">
-          <table id="episode_${data['season_status_id']}" class="card" style="display:none">
+          <table id="episode_${data['season_status_id']}" style="display:none">
             <thead>
               <tr>
                 <td>
@@ -448,7 +455,6 @@ function renderEpisodeRow(data){
 
 function renderBlurRow(data){
     return `<tr class="handleSearch hidden_button" data-id="${data['anime_title']}">
-          <td>${data['id']}</td>
           <td class="title">${data['anime_title']}</td>
           <td class="title">${data['anime_title_jp']}</td>
           <td>${data['season_count']}</td>
@@ -464,9 +470,9 @@ function renderStatusRow(data) {
             <td class="title">${data['anime_title']}</td>
             <td>${data['season']}</td>
             <td class="title">${data['season_title']}</td>
-            <td>${data['status']}</td>
+            <td>${translate[data['status']]}</td>
             <td>${data['air_year']}</td>
-            <td>${data['air_season']}</td>
+            <td>${translate[data['air_season']]}</td>
             <td>${data['cur_episode']}</td>
             <td>${data['total_episodes']}</td>
             <td>${data['rate']}</td>
