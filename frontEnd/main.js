@@ -8,7 +8,8 @@ const state = {
     cur_anime_title_jp:null,
     cur_season_id:null,
     cur_finished_season:null,
-    today:new Date().toISOString().slice(0, 10)
+    today:new Date().toISOString().slice(0, 10),
+    isUpdating:false
 }
 
 const translate = {
@@ -39,13 +40,27 @@ async function init_db(){
     return data['init']
 }
 
-async function status(status){
+async function watch_list(status){
     let url = `/lookup/season_status?status=${status}`;
     let res = await fetch(url).then(response =>(response.json()));
     const container = document.querySelector("#"+status);
     if (!res){return}
     container.innerHTML = res.map(renderListRow).join("");
     }
+
+async function update_watch_list(){
+    if(state.isUpdating){return;}
+
+    state.isUpdating = true;
+
+    await Promise.all([
+        watch_list("plan"),
+        watch_list("next"),
+        watch_list("watching")
+    ]);
+
+        state.isUpdating = false;
+}
 
 async function achievement(){
     const container = document.querySelector("#achievement");
@@ -79,6 +94,11 @@ function random_img(){
     }
     const shuffled = imgs.sort(()=> Math.random() -0.5);
     document.querySelector("#img1").src = shuffled[0]
+}
+
+function onclick_img1(){
+    console.log("宅弊了")
+    random_img()
 }
 
 // -------CRUD----------------------------------------------------------------
@@ -117,6 +137,7 @@ async function update_anime(){
         const res = await response.json();
         await handleSearch(title);
         console.log(res)
+        await update_watch_list();
     }
 }
 
@@ -132,6 +153,8 @@ async function delete_anime(){
     }}
 
 async function append_season() {
+    const row = document.querySelector("#append_season")
+    row.querySelector(".show_anime").textContent = state.cur_anime_title
     const res = await open_dialog("#append_season")
     if (res){
         const data={
@@ -144,7 +167,7 @@ async function append_season() {
         "air_season":document.querySelector("#air_season").value,
         "rate":document.querySelector("#rate").value
         }
-
+        console.log(data)
         if (!data.season){alert("season cannot be empty"); return;}
 
         const response = await fetch(`/anime/${state.cur_anime_id}/seasons`,{
@@ -156,12 +179,18 @@ async function append_season() {
         if (response.ok){
             if(!return_data["res"]){alert(return_data["status"]);}
             await get_seasons(state.cur_anime_id);
+            await update_watch_list();
+        }
+        else if (!response.ok){
+            console.error(return_data.detail)
         }
     }
-    document.querySelector("#append_season form").reset()
+    document.querySelector("#append_season form").reset();
 }
 
 async function update_season(season_id){
+    const row = document.querySelector("#update_seasons")
+    row.querySelector(".show_anime").textContent = state.cur_anime_title
     const response = await fetch("/season/resolve?season_id="+season_id).then(response=>(response.json()));
     for (let key in response[0]){
         document.querySelector("#update_"+key).value = response[0][key]
@@ -179,6 +208,7 @@ async function update_season(season_id){
                                         body:JSON.stringify(data)
         });
         await get_seasons(state.cur_anime_id);
+        await update_watch_list();
     }
 }
 
@@ -187,12 +217,16 @@ async function delete_season(season_id){
     if(res){const response = await fetch(`/seasons/${season_id}`, {method:"DELETE"});
           const data = await response.json();
           console.log(data);
+          await update_watch_list()
           await get_seasons(state.cur_anime_id);
     }
 }
 
-async function append_episode(season_id){
+async function append_episode(season_id,season){
     document.querySelector("#watch_date").value= state.today;
+    const row = document.querySelector("#append_episode")
+    row.querySelector(".show_anime").textContent = state.cur_anime_title
+    row.querySelector(".show_season").textContent = season
     const res = await open_dialog("#append_episode")
     if(res){
         const data = {
@@ -213,6 +247,7 @@ async function append_episode(season_id){
             if (!return_data['res']){alert(return_data['status']);}
             await get_seasons(state.cur_anime_id);
             await get_episodes(season_id);
+            await update_watch_list();
         }
     }
     document.querySelector("#append_episode form").reset()
@@ -237,11 +272,14 @@ async function finish_all_episode(season_id){
     }
     }
 
-async function update_episode(episode_id){
+async function update_episode(episode_id,season){
     const response = await fetch("/episode/resolve?episode_id="+episode_id).then(response=>(response.json()))
     for (let key in response[0]){
     document.querySelector("#update_"+key).value = response[0][key]
     }
+    const row = document.querySelector("#update_episodes")
+    row.querySelector(".show_anime").textContent = state.cur_anime_title
+    row.querySelector(".show_season").textContent = season
     const res = await open_dialog("#update_episodes")
 
     if (res){
@@ -258,6 +296,7 @@ async function update_episode(episode_id){
         if(response_sql.ok){
             await get_seasons(state.cur_anime_id);
             await get_episodes(state.cur_season_id);
+            await update_watch_list();
         }
     }
 }
@@ -269,6 +308,7 @@ async function delete_episode(episode_id){
           console.log(data);
           await get_seasons(state.cur_anime_id);
           await get_episodes(state.cur_season_id);
+          await update_watch_list();
     }
     }
 
@@ -305,15 +345,15 @@ async function status_search(){
     "total_episodes":document.querySelector("#input_total_episodes").value,
     "air_year":document.querySelector("#input_air_year").value,
     "air_season":document.querySelector("#input_air_season").value,
-    "rate":document.querySelector("#input_rate").value
+    "rate":document.querySelector("#input_rate").value,
     };
     const params = new URLSearchParams();
     for (let key in data){
-    if(data[key] !== "" && data[key]!== null && data[key]!==undefined){
-      params.append(key,data[key])
-    }
-    if(key==="get_season"){key="season"}
-    document.querySelector("#input_"+key).value = "";
+        if(data[key] !== "" && data[key]!== null && data[key]!==undefined){
+          params.append(key,data[key])
+        }
+        if(key==="get_season"){key="season"}
+        document.querySelector("#input_"+key).value = "";
     }
     const url = "lookup/season_status?" + params.toString();
     const response = await fetch(url);
@@ -438,13 +478,13 @@ function renderSeasonRow(data){
             <td>${data['first_watch_date']}</td>
             <td>${data['last_watch_date']}</td>
       </tr>
-      <tr>
-        <td colspan="5">
-          <table id="episode_${data['season_status_id']}" style="display:none">
+      <tr class="inner_card">
+        <td colspan="10">
+          <table id="episode_${data['season_status_id']}" class="episode_row" style="display:none">
             <thead>
               <tr>
                 <td>
-                    <button class="append_episode" data-id="${data['season_status_id']}">新增</button>
+                    <button class="append_episode" data-id="${data['season_status_id']}" data-value="${data['season']}">新增</button>
                     <button class="finish_all_episode" data-id="${data['season_status_id']}">看完</button>
                 </td>
                 <td>集數</td>
@@ -463,7 +503,7 @@ function renderEpisodeRow(data){
     return `<tr>
           <td>
             <button class="delete_episode" data-id="${data['episode_id']}">X</button>
-            <button class="update_episode" data-id="${data['episode_id']}">修改</button>
+            <button class="update_episode" data-id="${data['episode_id']}" data-value="${data['season']}">修改</button>
           </td>
           <td>${data['episode']}</td>
           <td class="title">${data['episode_title']}</td>
@@ -501,9 +541,7 @@ function renderStatusRow(data) {
 async function init(){
     const is_db = await init_db();
     if (!is_db){
-        await status("plan");
-        await status("next");
-        await status("watching");
+        await update_watch_list();
         await count_watched();
         await achievement();
         await random_img()
@@ -525,6 +563,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 document.addEventListener("DOMContentLoaded",()=>{
     document.getElementById("addSeason").addEventListener("click", ()=>(append_season()))})
 
+document.addEventListener("DOMContentLoaded",()=>{
+    document.querySelector("#img1").addEventListener("click",onclick_img1)})
 
 // --------watch_list-----------------------------------------------------------
 document.addEventListener("DOMContentLoaded",()=>{
@@ -557,7 +597,8 @@ document.addEventListener("DOMContentLoaded",()=>{
             await get_episodes(row.dataset.id);
         }
         else if(e.target.matches(".append_episode")){
-            await append_episode(id);
+            const season = e.target.dataset.value
+            await append_episode(id,season);
         }
         else if(e.target.matches(".finish_all_episode")){
             await finish_all_episode(id);
@@ -566,7 +607,8 @@ document.addEventListener("DOMContentLoaded",()=>{
             await delete_episode(id);
         }
         else if(e.target.matches(".update_episode")){
-            await update_episode(id);
+            const season = e.target.dataset.value
+            await update_episode(id,season);
         }
     })
 });

@@ -292,6 +292,7 @@ class AnimeDB:
     def lookup_episode_log(self,season_status_id=None,episode= None,episode_title = None,watch_date = None):
         fields, params = self.episode_log_arguments(season_status_id,episode,episode_title,watch_date)
         select = ("SELECT "
+                  "s.season AS season, "
                   "e.id AS episode_id, "
                   "e.episode AS episode, "
                   "e.episode_title AS episode_title, "

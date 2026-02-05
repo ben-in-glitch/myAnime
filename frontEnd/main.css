@@ -16,6 +16,7 @@
     --button:#F29CA3;
     --button-ch:#FFFFE8;
     --thead:#F5B3B8;
+    --inner_thead: black;
     --primary:#F7CACD;
     --hr:#BED8E3;
 }
@@ -70,17 +71,9 @@ body {
 }
 
 /*---------------------table---------------------------------------------*/
-.card {
-    border-collapse: collapse;
-    width: 100%;
-    thead {
-        background-color: var(--thead);
-        text-align: right;
-        };
-    }
 th, td{
-    border-bottom:1px solid var(--border);
-    padding:8px 12px;
+    border-bottom: 1px solid var(--border);
+    padding:8px 8px;
     vertical-align: middle;
     text-align:center;
 }
@@ -89,6 +82,34 @@ th{
 }
 td{
     color:var(--primary_ch);
+}
+
+.card {
+    border-collapse: collapse;
+    table-layout:auto;
+    width:100%;
+    thead {
+        background-color: var(--thead);
+        };
+    }
+
+.inner_card{
+    td{
+        border-bottom:none;
+        padding: 12px 12px;
+        vertical-align: middle;
+        text-align:center;
+    }
+    .episode_row{
+        padding-left: 30px;
+    }
+}
+
+.title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 /*--------------------button-------------------------------------------------*/
 button{
@@ -181,8 +202,16 @@ input{
 
 .img{
     margin-top:var(--space-3);
-    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: #fafafa;
+    border-radius: 8px;
+    border: 2px solid var(--inner_thead);
     width:500px;
     max-width:100%;
     height:auto
+}
+
+.img:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
 }
