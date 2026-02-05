@@ -41,7 +41,7 @@ myAnime/
    ├─ index.html
    ├─ main.css
    ├─ main.js
-   └─ img/
+   └─ img/ (自己找喜歡的圖片放進資料夾 ex. img1.jpg (目前能放1到11，其他暫時找不到))
 
 ```
 
@@ -75,3 +75,19 @@ uvicorn myanimeAPI:app --reload
 - [SQLite Tutorial](https://www.sqlitetutorial.net/sqlite-python/) – Used for understanding SQLite in Python
 - [彭彭的 YouTube 課程](https://www.youtube.com/@cwpeng-course) – Helped with frontend(HTML, JS, CSS) & backend (FastAPI) integration
 - ChatGPT – Assisted in explaining all my questions
+
+
+### About This Project (2026-02-05)
+
+This is my second project and also serves as my half-year review since I started learning programming in August 2025.  
+
+ost of the skills and knowledge I used were learned **just-in-time**, as I needed them for the project. 
+
+There may still be some bugs, but it's currently workable based on my tests. I might optimize and improve the project over time in the future.  
+
+**My learning journey:**  
+- SQLite: 2026-01-05  
+- FastAPI: 2026-01-08  
+- HTML: 2026-01-15  
+- JavaScript: 2026-01-16  
+- CSS: 2026-01-29
