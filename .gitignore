@@ -2,6 +2,7 @@ FastAPI_practice/
 frontend_practice/
 SQLite_practice/
 test/
+frontEnd/img
 
 __pycache__/
 *.pyc
