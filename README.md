@@ -75,6 +75,7 @@ uvicorn myanimeAPI:app --reload
 - [SQLite Tutorial](https://www.sqlitetutorial.net/sqlite-python/) – Used for understanding SQLite in Python
 - [彭彭的 YouTube 課程](https://www.youtube.com/@cwpeng-course) – Helped with frontend(HTML, JS, CSS) & backend (FastAPI) integration
 - ChatGPT – Assisted in explaining all my questions
+- Jerry - Provided me ideas for this project and some coding suggestions
 
 
 ### About This Project (2026-02-05)
