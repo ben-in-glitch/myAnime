@@ -1,5 +1,3 @@
-from operator import ifloordiv
-
 from myanime import AnimeDB
 from fastapi import FastAPI, Query,Body,HTTPException
 from datetime import date, datetime
