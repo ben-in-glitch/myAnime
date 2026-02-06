@@ -255,7 +255,10 @@ async function append_episode(season_id,season){
     document.querySelector("#append_episode form").reset()
 }
 
-async function finish_all_episode(season_id){
+async function finish_all_episode(season_id,season){
+    const row = document.querySelector("#finish_all_episodes")
+    row.querySelector(".show_anime").textContent = state.cur_anime_title
+    row.querySelector(".show_season").textContent = season
     const confirm = await open_dialog("#finish_all_episodes")
     if (confirm){const response = await fetch("/season/resolve?season_id="+season_id).then(response=>(response.json()))
         const total_episode = response[0]['total_episodes']
@@ -489,7 +492,7 @@ function renderSeasonRow(data){
               <tr>
                 <td>
                     <button class="append_episode" data-id="${data['season_status_id']}" data-value="${data['season']}">新增</button>
-                    <button class="finish_all_episode" data-id="${data['season_status_id']}">看完</button>
+                    <button class="finish_all_episode" data-id="${data['season_status_id']}" data-value="${data['season']}">看完</button>
                 </td>
                 <td>集數</td>
                 <td>名稱</td>
@@ -599,7 +602,8 @@ document.addEventListener("DOMContentLoaded",()=>{
             await append_episode(id,season);
         }
         else if(e.target.matches(".finish_all_episode")){
-            await finish_all_episode(id);
+            const season = e.target.dataset.value
+            await finish_all_episode(id,season);
         }
         else if(e.target.matches(".delete_episode")){
             await delete_episode(id);

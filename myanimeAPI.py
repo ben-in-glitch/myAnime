@@ -89,7 +89,7 @@ def season_status(body = Body(None)):
     validate_input(get_season=post_season,status=status,season_title=season_title,total_episodes=total_episodes,air_year=air_year,air_season=air_season,rate=rate)
 
     add, season_status_id = db.season_status_get_or_create(anime_id,post_season,status,season_title,total_episodes,air_year,air_season,rate)
-    status = "new season created successfully" if add else "this season already exists"
+    status = "new season created successfully" if add else "failed to created new season"
     return {"res":add,
             "status": status}
 

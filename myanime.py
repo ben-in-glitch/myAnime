@@ -22,7 +22,6 @@ season_status = '''CREATE TABLE IF NOT EXISTS season_status (
                 air_year INTEGER,
                 air_season TEXT CHECK (air_season IN ('','winter','spring','summer','fall')) DEFAULT '',
                 rate INTEGER CHECK(rate between -1 and 5) DEFAULT -1,
-                UNIQUE (anime_id, season),
                 FOREIGN KEY (anime_id)
                     REFERENCES anime(id)
                     ON DELETE CASCADE
@@ -123,18 +122,18 @@ class AnimeDB:
 
 # ----------------------------season_status---------------------------------
     def season_status_get_or_create(self,fk,season,status="plan",season_title = None,total_episodes = None,air_year = None,air_season = None,rate = None):
-        select = "SELECT * FROM season_status WHERE anime_id = ? AND season = ?"
+        # select = "SELECT * FROM season_status WHERE anime_id = ? AND season = ?"
         insert = "INSERT INTO season_status (anime_id,season,status,season_title,total_episodes,air_year,air_season,rate) VALUES (?,?,?,?,?,?,?,?)"
         with self.get_connection() as conn:
             cur = conn.cursor()
-            res = cur.execute(select,(fk,season)).fetchone()
-            if not res:
-                air_season = air_season.lower() if air_season else None
-                params = [fk, season, status.lower(), season_title, total_episodes, air_year, air_season, rate]
-                cur.execute(insert,params)
-                return True, cur.lastrowid
+            # res = cur.execute(select,(fk,season)).fetchone()
+            # if not res:
+            air_season = air_season.lower() if air_season else None
+            params = [fk, season, status.lower(), season_title, total_episodes, air_year, air_season, rate]
+            cur.execute(insert,params)
+            return True, cur.lastrowid
 
-            return False, res[0]
+            # return False, res[0]
 
     def season_status_delete(self, pk):
         select = ("SELECT a.title AS anime_title, s.season AS season "
@@ -283,8 +282,7 @@ class AnimeDB:
                   f"LEFT JOIN episode_log e ON s.id = e.season_status_id ")
         if fields:
             select += " WHERE " + " AND ".join(fields)
-        select += (" GROUP BY a.id, a.title, s.season "
-                   "ORDER BY s.air_year, CASE s.air_season WHEN 'spring' THEN 1 WHEN 'summer' THEN 2 WHEN 'fall' THEN 3 WHEN 'winter' THEN 4 ELSE 99 END, s.id")
+        select += " GROUP BY a.id, s.id ORDER BY s.air_year, CASE s.air_season WHEN 'spring' THEN 1 WHEN 'summer' THEN 2 WHEN 'fall' THEN 3 WHEN 'winter' THEN 4 ELSE 99 END, s.id"
         with self.get_connection() as conn:
             cur = conn.cursor()
             cur.execute(select, params)
@@ -444,4 +442,3 @@ def fetch_all_as_dict(cur):
     return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 #----------------------------testing-----------------------------------------
-
