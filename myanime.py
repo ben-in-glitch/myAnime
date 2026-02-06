@@ -66,8 +66,9 @@ class AnimeDB:
                 cur.execute(anime)
                 cur.execute(episode_log)
                 cur.execute(season_status)
+            print("🟡 DB not found, initializing...")
             return True
-
+        print("🟢 DB already exists, skip init")
         return False
 
     def remove_db(self):

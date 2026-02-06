@@ -6,6 +6,9 @@ from typing import Annotated,Literal
 from fastapi.staticfiles import StaticFiles
 
 #2026-01-08
+
+db = AnimeDB()
+db.init_db()
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -14,7 +17,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-db = AnimeDB()
+
 StatusType = Literal["plan","next","watching","finished","quit"]
 # --------------------------------------index/set-up-----------------------------------------------
 # @app.get("/")
@@ -76,7 +79,7 @@ def season_status(anime_id:int):
 @app.post("/anime/{anime_id}/seasons")
 def season_status(body = Body(None)):
     anime_id: int =body["anime_id"]
-    post_season :int = int(body["season"])
+    post_season :str = str(body["season"])
     status: str = body["status"] if body["status"] else "plan"
     season_title: str = body["season_title"]
     total_episodes: int = int(body["total_episodes"]) if body["total_episodes"] else 12
@@ -93,7 +96,7 @@ def season_status(body = Body(None)):
 @app.patch("/seasons/{season_status_id}")
 def season_status(body=Body(None)):
     season_status_id = body["season_status_id"]
-    update_season= int(body["season"])
+    update_season= str(body["season"])
     status = body["status"] if body["status"] else None
     season_title = body["season_title"]
     total_episodes = int(body["total_episodes"]) if body["total_episodes"] else 12
@@ -181,7 +184,7 @@ def anime(title=""):
 
 @app.get("/lookup/season_status")
 def season_status(anime_id:int = None,
-                  get_season:int = None,
+                  get_season:str = None,
                   status:str = None,
                   season_title:str = None,
                   total_episodes:int = None,
@@ -197,7 +200,7 @@ def episode_log(season_status_id:int = None, get_episode:int = None,title:str = 
     return db.lookup_episode_log(season_status_id=season_status_id,episode=get_episode,episode_title=title,watch_date=watch_date)
 
 @app.get("/anime/resolve")
-def anime(title:str, get_season:int = None, get_episode:int = None):
+def anime(title:str, get_season:str = None, get_episode:int = None):
     return db.lookup_anime_resolve(title,get_season,get_episode)
 
 @app.get("/season/resolve")
@@ -243,7 +246,7 @@ def validate_input(**kwargs):
         if kwargs["episode_title"] and len(kwargs["episode_title"]) > 50:
             raise HTTPException(status_code=400,detail="Too long title")
     if "get_season" in kwargs:
-        if kwargs["get_season"] and not (0<kwargs["get_season"]<1000):
+        if kwargs["get_season"] and len(kwargs["get_season"]) > 50:
             raise HTTPException(status_code=400, detail="Season out of range")
     if "air_year" in kwargs:
         if kwargs["air_year"] not in(None,"") and not (1900<int(kwargs["air_year"])<2999):

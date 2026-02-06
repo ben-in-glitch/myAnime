@@ -34,11 +34,11 @@ function set_cur_finished_season(n){state.cur_finished_season = n}
 
 // -------others----------------------------------------------------------------
 
-async function init_db(){
-    const res = await fetch("/init",{method:"POST"});
-    const data = await res.json();
-    return data['init']
-}
+// async function init_db(){
+//     const res = await fetch("/init",{method:"POST"});
+//     const data = await res.json();
+//     return data['init']
+// }
 
 async function watch_list(status){
     let url = `/lookup/season_status?status=${status}`;
@@ -543,16 +543,10 @@ function renderStatusRow(data) {
     }
 
 async function init(){
-    const is_db = await init_db();
-    if (!is_db){
-        await update_watch_list();
-        await count_watched();
-        await achievement();
-        await random_img()
-    }
-    else{
-        window.location.href = "/"
-    }
+    await update_watch_list();
+    await count_watched();
+    await achievement();
+    await random_img()
 
     }
 
