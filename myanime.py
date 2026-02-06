@@ -14,7 +14,7 @@ anime = '''CREATE TABLE IF NOT EXISTS anime (
 season_status = '''CREATE TABLE IF NOT EXISTS season_status (
                 id INTEGER PRIMARY KEY,
                 anime_id INTEGER NOT NULL,
-                season INTEGER NOT NULL,
+                season TEXT NOT NULL,
                 status TEXT NOT NULL
                     CHECK(status IN ('plan','watching','finished','next','quit')),
                 season_title TEXT,
@@ -282,7 +282,8 @@ class AnimeDB:
                   f"LEFT JOIN episode_log e ON s.id = e.season_status_id ")
         if fields:
             select += " WHERE " + " AND ".join(fields)
-        select += " GROUP BY a.id, a.title, s.season"
+        select += (" GROUP BY a.id, a.title, s.season "
+                   "ORDER BY s.air_year, CASE s.air_season WHEN 'spring' THEN 1 WHEN 'summer' THEN 2 WHEN 'fall' THEN 3 WHEN 'winter' THEN 4 ELSE 99 END, s.id")
         with self.get_connection() as conn:
             cur = conn.cursor()
             cur.execute(select, params)
@@ -443,9 +444,3 @@ def fetch_all_as_dict(cur):
 
 #----------------------------testing-----------------------------------------
 
-# print(db.lookup_anime("我內心"))
-# x = db.lookup_episode_log(season_status_id = 20)
-# for i in x:
-#     print(i)
-
-# print(db.season_status_update(23,None,1,"watching","run",1,2025,"fall",5))
