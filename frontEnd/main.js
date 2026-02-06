@@ -118,6 +118,8 @@ async function append_anime(){
 
     let res = await response.json();
     console.log(res)
+    document.querySelector("#anime_title").value=""
+    document.querySelector("#anime_title_jp").value=""
     await handleSearch(title);
     }
 
@@ -254,21 +256,23 @@ async function append_episode(season_id,season){
 }
 
 async function finish_all_episode(season_id){
-    const confirm = await open_dialog("#confirm")
+    const confirm = await open_dialog("#finish_all_episodes")
     if (confirm){const response = await fetch("/season/resolve?season_id="+season_id).then(response=>(response.json()))
-    const total_episode = response[0]['total_episodes']
-    for (let i=1; i<=total_episode;i++){
-      await fetch(`/seasons/${season_id}/episodes`,{
-            method:"POST",
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({"season_status_id":season_id,
-                                  "episode":i,
-                                  "title":null,
-                                  "watch_date":null})
-          }).then(res=>(res.json()))
-      }
-    await get_seasons(state.cur_anime_id);
-    await get_episodes(season_id);
+        const total_episode = response[0]['total_episodes']
+        const watch_date = document.querySelector("#all_watch_date").value
+        for (let i=1; i<=total_episode;i++){
+          await fetch(`/seasons/${season_id}/episodes`,{
+                method:"POST",
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({"season_status_id":season_id,
+                                      "episode":i,
+                                      "title":null,
+                                      "watch_date":watch_date})
+              }).then(res=>(res.json()))
+          }
+        document.querySelector("#all_watch_date").value= ""
+        await get_seasons(state.cur_anime_id);
+        await get_episodes(season_id);
     }
     }
 

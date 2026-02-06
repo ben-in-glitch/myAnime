@@ -380,6 +380,24 @@
     </form>
   </dialog>
 
+  <dialog id="finish_all_episodes">
+    <div>
+      <div class="show_anime action"></div>
+      <div class="action">第<span class="show_season"></span>季</div>
+      <div class="action">全部看完</div>
+    </div>
+    <form method="dialog">
+      <p class="form-row">
+        <label for="all_watch_date">觀看日期:</label>
+        <input id="all_watch_date" type="date" placeholder="YYYY-MM-DD(預設今天)" min="1900-01-01" max="2999-12-31">
+      </p>
+      <div class="action">
+        <button value="true">送出</button>
+        <button value="false">關閉</button>
+      </div>
+    </form>
+  </dialog>
+
   <dialog id="confirm">
     <form method="dialog">
       <div>確定送出?</div>
