@@ -282,7 +282,7 @@ class AnimeDB:
                   f"LEFT JOIN episode_log e ON s.id = e.season_status_id ")
         if fields:
             select += " WHERE " + " AND ".join(fields)
-        select += " GROUP BY a.id, s.id ORDER BY s.air_year, CASE s.air_season WHEN 'spring' THEN 1 WHEN 'summer' THEN 2 WHEN 'fall' THEN 3 WHEN 'winter' THEN 4 ELSE 99 END, s.id"
+        select += " GROUP BY a.id, s.id ORDER BY s.air_year, CASE s.air_season WHEN 'winter' THEN 1 WHEN 'spring' THEN 2 WHEN 'summer' THEN 3 WHEN 'fall' THEN 4 ELSE 99 END, s.id"
         with self.get_connection() as conn:
             cur = conn.cursor()
             cur.execute(select, params)
