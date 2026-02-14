@@ -48,6 +48,9 @@ async function watch_list(status){
     container.innerHTML = res.map(renderListRow).join("");
     }
 
+// Known issue:
+// watchList does not always refresh after CRUD.
+
 async function update_watch_list(){
     if(state.isUpdating){return;}
 

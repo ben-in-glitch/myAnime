@@ -41,8 +41,7 @@ myAnime/
    ├─ index.html
    ├─ main.css
    ├─ main.js
-   └─ img/ (自己找喜歡的圖片放進資料夾 ex. img1.jpg (目前能放1到11，其他暫時找不到))
-
+   └─ img/ (找自己喜歡的圖片放進資料夾(請自己創建) 並按照格式命名: img1.jpg(目前可放1-11)
 ```
 
 ### 安裝與啟動(Installation & Running)
@@ -92,3 +91,13 @@ There may still be some bugs, but it's currently workable based on my tests. I m
 - HTML: 2026-01-15  
 - JavaScript: 2026-01-16  
 - CSS: 2026-01-29
+
+
+**known issues**
+- watchlist does not refresh after CRUD(current resolve -> F5)
+
+
+**await optimise(for myself)**
+- optimise seasons/episodes layout/CRUD options
+- blur search/ status search/ season layout api separate and optimize
+- img/ img related functions optimise or provide some images first
