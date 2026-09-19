@@ -1,4 +1,5 @@
 ## MyAnime – 動畫觀看紀錄系統 (Anime Watch Tracker)
+[English](README.md) | [繁體中文](README_zh-TW.md)
 
 這是一個簡單的動畫觀看紀錄專案，前端使用 HTML/CSS/JS，後端使用 FastAPI + SQLite。  
 This is a simple anime watch tracking project with a frontend built in HTML/CSS/JS and a backend using FastAPI + SQLite.
