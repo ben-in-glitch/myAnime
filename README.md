@@ -1,5 +1,7 @@
 ## MyAnime – Anime Watch Tracker
 
+[English](README.md) | [繁體中文](README_zh-TW.md)
+
 This is a simple anime watch tracking project with a frontend built in HTML/CSS/JS and a backend using FastAPI + SQLite.
 
 ---
